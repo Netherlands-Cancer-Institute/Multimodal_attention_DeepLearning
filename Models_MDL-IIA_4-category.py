@@ -173,7 +173,7 @@ x12=Reshape((h1, w1, c1))(x12)
 x11=Downsampling_model(x11)
 x12=Downsampling_model(x12)
 
-# intra-modality attention
+## intra-modality attention
 a2=Self_Attention(1024)(x_us)
 
 x2 = bottleneck_Block(a2, nb_filters=[512, 512, 2048], strides=(2, 2), with_conv_shortcut=True)
@@ -181,7 +181,7 @@ x2 = bottleneck_Block(x2, nb_filters=[512, 512, 2048])
 x2 = bottleneck_Block(x2, nb_filters=[512, 512, 2048])
 ccc = concatenate([x11, x12, x2], axis=2)
 
-# inter-modality attention
+## inter-modality attention
 a3=Self_Attention(2048)(ccc)
 
 x6 = tf.keras.layers.Lambda(tf.split, arguments={'axis': 2, 'num_or_size_splits': 3})(a3)
@@ -192,7 +192,7 @@ x62=Reshape((h6, w6, c6))(x62)
 x63=Reshape((h6, w6, c6))(x63)
 c6 = concatenate([x61, x62, x63], axis=3)
 
-# channel and spatial attention
+## channel and spatial attention
 x3=CSA(c6)
 
 x3 = tf.keras.layers.Lambda(tf.split, arguments={'axis': 3, 'num_or_size_splits': 3})(x3)
@@ -209,7 +209,7 @@ x = Flatten()(x)
 x = Dense(512,"relu")(x)   
 x = Dropout(0.3)(x)
 output = Dense(num_classes, activation='softmax',name='output')(x)
-model = Model(inputs=[MLO_model.input,CC_model.input,US_model.input], outputs=[output])
+model = Model(inputs=[digit_MLO,digit_CC,digit_US], outputs=[output])
 opt = tf.keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 lr_metric = get_lr_metric(opt)
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=[f1, 'accuracy', lr_metric])
@@ -223,12 +223,12 @@ def scheduler(epoch):
 
 reduce_lr = LearningRateScheduler(scheduler)
 
-### path to save the model
+# path to save the model
 best_weights_file=".../MDL-IIA.weights.best.hdf5"
 
-### checkpoint, callbacks 
+# checkpoint, callbacks 
 checkpoint = ModelCheckpoint(best_weights_file, monitor='val_f1', verbose=1, save_best_only=True, save_weights_only=True, mode='max')
 callbacks = [checkpoint, reduce_lr]
 
-### Training model
+# Training model
 history=model.fit([x_train_MLO,x_train_CC,x_train_US],y_val,batch_size=batch_size, epochs=all_epochs, callbacks=callbacks, verbose=1, validation_data=([x_val_MLO,x_val_CC,x_val_US],y_val),shuffle=True)
