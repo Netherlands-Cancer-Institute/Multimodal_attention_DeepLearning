@@ -28,7 +28,7 @@ in_channel = 3
 img_rows, img_cols = 256, 256
 num_classes = 4
 batch_size = 32
-epochs = 200
+all_epochs = 200
 input_shape = (img_rows, img_cols, in_channel)
 input_img = Input(shape = input_shape)
 
