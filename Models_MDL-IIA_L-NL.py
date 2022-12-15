@@ -17,6 +17,7 @@ from matplotlib import pyplot as plt
 from sklearn import metrics, manifold
 from sklearn.metrics import matthews_corrcoef  
 from sklearn.model_selection import train_test_split
+from Data_loading import read_mg, read_us
 
 tf.random.set_seed(1203)
 as_gray = True
@@ -39,30 +40,30 @@ y_data=train_df.iloc[:,0:1]
 
 x_train, x_val, y_train, y_val = train_test_split(x_data, y_data, test_size = 0.2, random_state=1203)
 print("Uploading train_cc...")
-x_train_CC = r_mg(x_train.CC_file.values, img_rows, img_cols, as_gray, in_channel)
+x_train_CC = read_mg(x_train.CC_file.values, img_rows, img_cols, as_gray, in_channel)
 print("Done!")
 print("------------------------------------------------------------------------------------------------")
 print("Uploading train_mlo...")
-x_train_MLO = r_mg(x_train.MLO_file.values, img_rows, img_cols, as_gray, in_channel)
+x_train_MLO = read_mg(x_train.MLO_file.values, img_rows, img_cols, as_gray, in_channel)
 print("Done!")
 print("------------------------------------------------------------------------------------------------")
 print("Uploading train_us...")
-x_train_US = r_us(x_train.US_file.values, img_rows, img_cols, as_gray, in_channel)
+x_train_US = read_us(x_train.US_file.values, img_rows, img_cols, as_gray, in_channel)
 print("Done!")
 print("------------------------------------------------------------------------------------------------")
 y_train = y_train.appliance.values
 y_train = tensorflow.keras.utils.to_categorical(y_train, num_classes)
 
 print("Uploading val_cc...")
-x_val_CC = r_mg(x_val.CC_file.values, img_rows, img_cols, as_gray, in_channel)
+x_val_CC = read_mg(x_val.CC_file.values, img_rows, img_cols, as_gray, in_channel)
 print("Done!")
 print("------------------------------------------------------------------------------------------------")
 print("Uploading val_mlo...")
-x_val_MLO = r_mg(x_val.MLO_file.values, img_rows, img_cols, as_gray, in_channel)
+x_val_MLO = read_mg(x_val.MLO_file.values, img_rows, img_cols, as_gray, in_channel)
 print("Done!")
 print("------------------------------------------------------------------------------------------------")
 print("Uploading val_us...")
-x_val_US = r_us(x_val.US_file.values, img_rows, img_cols, as_gray, in_channel)
+x_val_US = read_us(x_val.US_file.values, img_rows, img_cols, as_gray, in_channel)
 print("Done!")
 print("------------------------------------------------------------------------------------------------")
 y_val = y_val.appliance.values
