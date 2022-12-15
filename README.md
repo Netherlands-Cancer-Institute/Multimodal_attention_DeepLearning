@@ -11,5 +11,5 @@ The multi-modal deep learning algorithm was developed to predict the molecular s
 * scikit-learn 0.24.2
 
 
-### Model detail. MDL-IIA
-![image](https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Model.tif)
+### Model details
+![image](https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Model_details.png)
