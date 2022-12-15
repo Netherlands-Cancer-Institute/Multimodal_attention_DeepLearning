@@ -1,6 +1,6 @@
 # Multimodal_attention_DeepLearning
 
-MDL-IIA
+The multi-modal deep learning algorithm was developed to predict the molecular subtypes of breast cancer. This model was combined with the attention mechanism to create the final model (multi-modal deep learning with intra- and inter-modality attention modules: MDL-IIA)
 
 ### Requirements:
 
