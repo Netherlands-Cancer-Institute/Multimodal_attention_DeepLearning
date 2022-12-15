@@ -19,7 +19,9 @@ from sklearn.metrics import matthews_corrcoef
 from sklearn.model_selection import train_test_split
 from Data_loading import read_mg, read_us
 
+### set seed
 tf.random.set_seed(1203)
+
 as_gray = True
 in_channel = 3
 img_rows, img_cols = 256, 256
