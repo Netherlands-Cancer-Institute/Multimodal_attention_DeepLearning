@@ -18,7 +18,7 @@ from sklearn import metrics, manifold
 from sklearn.metrics import matthews_corrcoef  
 from sklearn.model_selection import train_test_split
 from Data_loading import read_mg, read_us
-from Attention_layer import 
+from Attention_layers import Self_Attention
 
 ### set seed
 tf.random.set_seed(1203)
