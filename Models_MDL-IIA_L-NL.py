@@ -18,6 +18,7 @@ from sklearn import metrics, manifold
 from sklearn.metrics import matthews_corrcoef  
 from sklearn.model_selection import train_test_split
 from Data_loading import read_mg, read_us
+from Attention_layer import 
 
 ### set seed
 tf.random.set_seed(1203)
@@ -95,6 +96,41 @@ def get_lr_metric(optimizer):
     def lr(y_true, y_pred):
         return optimizer.lr
     return lr
+
+### channel_spatial_attention
+channel_axis = 1 if K.image_data_format() == "channels_first" else 3
+def channel_attention(input_xs, reduction_ratio=0.125):
+    # get channel
+    channel = int(input_xs.shape[channel_axis])
+    maxpool_channel = KL.GlobalMaxPooling2D()(input_xs)
+    maxpool_channel = KL.Reshape((1, 1, channel))(maxpool_channel)
+    avgpool_channel = KL.GlobalAvgPool2D()(input_xs)
+    avgpool_channel = KL.Reshape((1, 1, channel))(avgpool_channel)
+    Dense_One = KL.Dense(units=int(channel * reduction_ratio), activation='relu', kernel_initializer='he_normal', use_bias=True, bias_initializer='zeros')
+    Dense_Two = KL.Dense(units=int(channel), activation='relu', kernel_initializer='he_normal', use_bias=True, bias_initializer='zeros')
+
+    mlp_1_max = Dense_One(maxpool_channel)
+    mlp_2_max = Dense_Two(mlp_1_max)
+    mlp_2_max = KL.Reshape(target_shape=(1, 1, int(channel)))(mlp_2_max)
+
+    mlp_1_avg = Dense_One(avgpool_channel)
+    mlp_2_avg = Dense_Two(mlp_1_avg)
+    mlp_2_avg = KL.Reshape(target_shape=(1, 1, int(channel)))(mlp_2_avg)
+    channel_attention_feature = KL.Add()([mlp_2_max, mlp_2_avg])
+    channel_attention_feature = KL.Activation('sigmoid')(channel_attention_feature)
+    return KL.Multiply()([channel_attention_feature, input_xs])
+def spatial_attention(channel_refined_feature):
+    maxpool_spatial = KL.Lambda(lambda x: K.max(x, axis=3, keepdims=True))(channel_refined_feature)
+    avgpool_spatial = KL.Lambda(lambda x: K.mean(x, axis=3, keepdims=True))(channel_refined_feature)
+    max_avg_pool_spatial = KL.Concatenate(axis=3)([maxpool_spatial, avgpool_spatial])
+    return KL.Conv2D(filters=1, kernel_size=(3, 3), padding="same", activation='sigmoid', kernel_initializer='he_normal', use_bias=False)(max_avg_pool_spatial)
+
+def CSA(input_xs, reduction_ratio=0.5):
+    channel_refined_feature = channel_attention(input_xs, reduction_ratio=reduction_ratio)
+    spatial_attention_feature = spatial_attention(channel_refined_feature)
+    refined_feature = KL.Multiply()([channel_refined_feature, spatial_attention_feature])
+    return KL.Add()([refined_feature, input_xs])
+
   
 ### Model
 base1=ResNet50(weights='imagenet',include_top=False,input_shape=(256, 256, 3))
@@ -117,7 +153,7 @@ x_us=US_model.output
 c1 = concatenate([x_mlo, x_cc],axis=2)
 
 ## intra-modality attention
-a1=SA(1024)(c1)
+a1=Self_Attention(1024)(c1)
 
 x1 = tf.keras.layers.Lambda(tf.split, arguments={'axis': 2, 'num_or_size_splits': 2})(a1)
 x11,x12=x1[0], x1[1]
@@ -134,7 +170,7 @@ x12 = bottleneck_Block(x12, nb_filters=[512, 512, 2048])
 x12 = bottleneck_Block(x12, nb_filters=[512, 512, 2048])
 
 # intra-modality attention
-a2=SA(1024)(x_us)
+a2=Self_Attention(1024)(x_us)
 
 x2 = bottleneck_Block(a2, nb_filters=[512, 512, 2048], strides=(2, 2), with_conv_shortcut=True)
 x2 = bottleneck_Block(x2, nb_filters=[512, 512, 2048])
@@ -142,7 +178,7 @@ x2 = bottleneck_Block(x2, nb_filters=[512, 512, 2048])
 ccc = concatenate([x11, x12, x2], axis=2)
 
 # inter-modality attention
-a3=SA(2048)(ccc)
+a3=Self_Attention(2048)(ccc)
 
 x6 = tf.keras.layers.Lambda(tf.split, arguments={'axis': 2, 'num_or_size_splits': 3})(a3)
 x61, x62, x63=x6[0], x6[1] ,x6[2]
@@ -152,8 +188,8 @@ x62=Reshape((h6, w6, c6))(x62)
 x63=Reshape((h6, w6, c6))(x63)
 c6 = concatenate([x61, x62, x63], axis=3)
 
-#cbam
-x3=cbam_module(c6)
+# channel_spatial_attention
+x3=CSA(c6)
 
 x3 = tf.keras.layers.Lambda(tf.split, arguments={'axis': 3, 'num_or_size_splits': 3})(x3)
 x31, x32, x33=x3[0], x3[1] ,x3[2]
