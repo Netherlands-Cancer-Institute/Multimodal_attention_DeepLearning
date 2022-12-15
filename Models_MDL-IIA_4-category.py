@@ -20,7 +20,7 @@ from sklearn.model_selection import train_test_split
 from Data_loading import read_mg, read_us
 from Attention_layers import Self_Attention
 
-### set seed
+# set seed
 tf.random.set_seed(1203)
 
 as_gray = True
@@ -32,7 +32,7 @@ all_epochs = 200
 input_shape = (img_rows, img_cols, in_channel)
 input_img = Input(shape = input_shape)
 
-### Loading data
+# Loading data
 train_df = pd.read_csv('.../train_labels.csv', index_col=0)
 train_df['MLO_file'] = train_df.index.map(lambda id: f'.../Multimodal_data/train/{id}_MLO.png')
 train_df['CC_file'] = train_df.index.map(lambda id: f'.../Multimodal_data/train/{id}_CC.png')
@@ -73,7 +73,7 @@ y_val = y_val.appliance.values
 y_val = tensorflow.keras.utils.to_categorical(y_val, num_classes)
 print("------------------------------------------------------------------------------------------------")
 
-### f1_score
+# f1_score
 def recall_m(y_true, y_pred):
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
     possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
@@ -91,16 +91,15 @@ def f1(y_true, y_pred):
     recall = recall_m(y_true, y_pred)
     return 2*((precision*recall)/(precision+recall+K.epsilon()))
 
-###Learning_rate_metric
+# Learning_rate_metric
 def get_lr_metric(optimizer):
     def lr(y_true, y_pred):
         return optimizer.lr
     return lr
 
-### channel_spatial_attention
+# channel_spatial_attention
 channel_axis = 1 if K.image_data_format() == "channels_first" else 3
 def channel_attention(input_xs, reduction_ratio=0.125):
-    # get channel
     channel = int(input_xs.shape[channel_axis])
     maxpool_channel = KL.GlobalMaxPooling2D()(input_xs)
     maxpool_channel = KL.Reshape((1, 1, channel))(maxpool_channel)
@@ -132,24 +131,34 @@ def CSA(input_xs, reduction_ratio=0.5):
     return KL.Add()([refined_feature, input_xs])
 
   
-### Model
+# Model
 base1=ResNet50(weights='imagenet',include_top=False,input_shape=(256, 256, 3))
-base2=ResNet50(weights='imagenet',include_top=False,input_shape=(256, 256, 3))
 base3=ResNet50(weights='imagenet',include_top=False,input_shape=(256, 256, 3))
 
 for layer in base1.layers :
     layer._name = layer.name + str('_1')
-for layer in base2.layers :
-    layer._name = layer.name + str('_2')
 for layer in base3.layers :
     layer._name = layer.name + str('_3')
 
-MLO_model = Model(inputs=base1.input, outputs=base1.get_layer('conv4_block6_out_1').output)
-CC_model = Model(inputs=base2.input, outputs=base2.get_layer('conv4_block6_out_2').output)
+## share weights module
+digit_input = Input(shape=(16, 16, 1024))
+x_d = bottleneck_Block(digit_input, nb_filters=[512, 512, 2048], strides=(2, 2), with_conv_shortcut=True)
+x_d = bottleneck_Block(x_d, nb_filters=[512, 512, 2048])
+x_d = bottleneck_Block(x_d, nb_filters=[512, 512, 2048])
+out_d = x_d
+Downsampling_model = Model(digit_input, out_d)
+
+MG_model = Model(inputs=base1.input, outputs=base1.get_layer('conv4_block6_out_1').output)
 US_model = Model(inputs=base3.input, outputs=base3.get_layer('conv4_block6_out_3').output)
-x_mlo=MLO_model.output
-x_cc=CC_model.output
-x_us=US_model.output
+
+digit_MLO = Input(shape=(256, 256, 3))
+digit_CC = Input(shape=(256, 256, 3))
+digit_US = Input(shape=(256, 256, 3))
+
+x_mlo=MG_model(digit_MLO)
+x_cc=MG_model(digit_CC)
+x_us=US_model(digit_US)
+
 c1 = concatenate([x_mlo, x_cc],axis=2)
 
 ## intra-modality attention
@@ -161,13 +170,8 @@ h1, w1, c1 = x11.shape[1],x11.shape[2],x11.shape[3]
 x11=Reshape((h1, w1, c1))(x11)
 x12=Reshape((h1, w1, c1))(x12)
 
-x11 = bottleneck_Block(x11, nb_filters=[512, 512, 2048], strides=(2, 2), with_conv_shortcut=True)
-x11 = bottleneck_Block(x11, nb_filters=[512, 512, 2048])
-x11 = bottleneck_Block(x11, nb_filters=[512, 512, 2048])
-
-x12 = bottleneck_Block(x12, nb_filters=[512, 512, 2048], strides=(2, 2), with_conv_shortcut=True)
-x12 = bottleneck_Block(x12, nb_filters=[512, 512, 2048])
-x12 = bottleneck_Block(x12, nb_filters=[512, 512, 2048])
+x11=Downsampling_model(x11)
+x12=Downsampling_model(x12)
 
 # intra-modality attention
 a2=Self_Attention(1024)(x_us)
