@@ -18,6 +18,7 @@ from sklearn import metrics, manifold
 from sklearn.metrics import matthews_corrcoef  
 from sklearn.model_selection import train_test_split
 from Data_loading import read_mg, read_us
+from Attention_layers import Self_Attention, CSA
 
 ### set seed
 tf.random.set_seed(1203)
@@ -117,7 +118,7 @@ x_us=US_model.output
 c1 = concatenate([x_mlo, x_cc],axis=2)
 
 ## intra-modality attention
-a1=SA(1024)(c1)
+a1=Self_Attention(1024)(c1)
 
 x1 = tf.keras.layers.Lambda(tf.split, arguments={'axis': 2, 'num_or_size_splits': 2})(a1)
 x11,x12=x1[0], x1[1]
@@ -134,7 +135,7 @@ x12 = bottleneck_Block(x12, nb_filters=[512, 512, 2048])
 x12 = bottleneck_Block(x12, nb_filters=[512, 512, 2048])
 
 # intra-modality attention
-a2=SA(1024)(x_us)
+a2=Self_Attention(1024)(x_us)
 
 x2 = bottleneck_Block(a2, nb_filters=[512, 512, 2048], strides=(2, 2), with_conv_shortcut=True)
 x2 = bottleneck_Block(x2, nb_filters=[512, 512, 2048])
@@ -142,7 +143,7 @@ x2 = bottleneck_Block(x2, nb_filters=[512, 512, 2048])
 ccc = concatenate([x11, x12, x2], axis=2)
 
 # inter-modality attention
-a3=SA(2048)(ccc)
+a3=Self_Attention(2048)(ccc)
 
 x6 = tf.keras.layers.Lambda(tf.split, arguments={'axis': 2, 'num_or_size_splits': 3})(a3)
 x61, x62, x63=x6[0], x6[1] ,x6[2]
@@ -152,8 +153,8 @@ x62=Reshape((h6, w6, c6))(x62)
 x63=Reshape((h6, w6, c6))(x63)
 c6 = concatenate([x61, x62, x63], axis=3)
 
-#cbam
-x3=cbam_module(c6)
+# channel and spatial attention
+x3=CSA(c6)
 
 x3 = tf.keras.layers.Lambda(tf.split, arguments={'axis': 3, 'num_or_size_splits': 3})(x3)
 x31, x32, x33=x3[0], x3[1] ,x3[2]
