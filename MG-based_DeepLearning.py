@@ -143,4 +143,4 @@ checkpoint = ModelCheckpoint(best_weights_file, monitor='val_f1', verbose=1, sav
 callbacks = [checkpoint, reduce_lr]
 
 # Training model
-history=model.fit([x_train_MLO,x_train_CC],y_val,batch_size=batch_size, epochs=all_epochs, callbacks=callbacks, verbose=1, validation_data=([x_val_MLO,x_val_CC],y_val),shuffle=True)
+history=model.fit([x_train_MLO,x_train_CC],y_train,batch_size=batch_size, epochs=all_epochs, callbacks=callbacks, verbose=1, validation_data=([x_val_MLO,x_val_CC],y_val),shuffle=True)
