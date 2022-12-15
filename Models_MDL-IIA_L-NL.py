@@ -20,7 +20,7 @@ from sklearn.model_selection import train_test_split
 from Data_loading import read_mg, read_us
 from Attention_layers import Self_Attention
 
-### set seed
+# set seed
 tf.random.set_seed(1203)
 
 as_gray = True
@@ -32,7 +32,7 @@ all_epochs = 200
 input_shape = (img_rows, img_cols, in_channel)
 input_img = Input(shape = input_shape)
 
-### Loading data
+# Loading data
 train_df = pd.read_csv('.../train_labels.csv', index_col=0)
 train_df['MLO_file'] = train_df.index.map(lambda id: f'.../Multimodal_data/train/{id}_MLO.png')
 train_df['CC_file'] = train_df.index.map(lambda id: f'.../Multimodal_data/train/{id}_CC.png')
@@ -73,7 +73,7 @@ y_val = y_val.appliance.values
 y_val = tensorflow.keras.utils.to_categorical(y_val, num_classes)
 print("------------------------------------------------------------------------------------------------")
 
-### f1_score
+# f1_score
 def recall_m(y_true, y_pred):
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
     possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
@@ -91,13 +91,13 @@ def f1(y_true, y_pred):
     recall = recall_m(y_true, y_pred)
     return 2*((precision*recall)/(precision+recall+K.epsilon()))
 
-###Learning_rate_metric
+# Learning_rate_metric
 def get_lr_metric(optimizer):
     def lr(y_true, y_pred):
         return optimizer.lr
     return lr
 
-### channel_spatial_attention
+# channel_spatial_attention
 channel_axis = 1 if K.image_data_format() == "channels_first" else 3
 def channel_attention(input_xs, reduction_ratio=0.125):
     # get channel
@@ -132,7 +132,7 @@ def CSA(input_xs, reduction_ratio=0.5):
     return KL.Add()([refined_feature, input_xs])
 
   
-### Model
+# Model
 base1=ResNet50(weights='imagenet',include_top=False,input_shape=(256, 256, 3))
 base3=ResNet50(weights='imagenet',include_top=False,input_shape=(256, 256, 3))
 
@@ -174,7 +174,7 @@ x12=Reshape((h1, w1, c1))(x12)
 x11=Downsampling_model(x11)
 x12=Downsampling_model(x12)
 
-# intra-modality attention
+## intra-modality attention
 a2=Self_Attention(1024)(x_us)
 
 x2 = bottleneck_Block(a2, nb_filters=[512, 512, 2048], strides=(2, 2), with_conv_shortcut=True)
@@ -182,7 +182,7 @@ x2 = bottleneck_Block(x2, nb_filters=[512, 512, 2048])
 x2 = bottleneck_Block(x2, nb_filters=[512, 512, 2048])
 ccc = concatenate([x11, x12, x2], axis=2)
 
-# inter-modality attention
+## inter-modality attention
 a3=Self_Attention(2048)(ccc)
 
 x6 = tf.keras.layers.Lambda(tf.split, arguments={'axis': 2, 'num_or_size_splits': 3})(a3)
@@ -193,7 +193,7 @@ x62=Reshape((h6, w6, c6))(x62)
 x63=Reshape((h6, w6, c6))(x63)
 c6 = concatenate([x61, x62, x63], axis=3)
 
-# channel_spatial_attention
+## channel_spatial_attention
 x3=CSA(c6)
 
 x3 = tf.keras.layers.Lambda(tf.split, arguments={'axis': 3, 'num_or_size_splits': 3})(x3)
@@ -224,12 +224,12 @@ def scheduler(epoch):
 
 reduce_lr = LearningRateScheduler(scheduler)
 
-### path to save the model
+# path to save the model
 best_weights_file=".../MDL-IIA_L-NL.weights.best.hdf5"
 
-### checkpoint, callbacks 
+# checkpoint, callbacks 
 checkpoint = ModelCheckpoint(best_weights_file, monitor='val_f1', verbose=1, save_best_only=True, save_weights_only=True, mode='max')
 callbacks = [checkpoint, reduce_lr]
 
-### Training model
+# Training model
 history=model.fit([x_train_MLO,x_train_CC,x_train_US],y_val,batch_size=batch_size, epochs=all_epochs, callbacks=callbacks, verbose=1, validation_data=([x_val_MLO,x_val_CC,x_val_US],y_val),shuffle=True)
