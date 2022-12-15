@@ -9,3 +9,7 @@ The multi-modal deep learning algorithm was developed to predict the molecular s
 * pandas 1.2.4
 * scikit-image 0.18.1
 * scikit-learn 0.24.2
+
+
+### Model detail. MDL-IIA
+![image](https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Model.tif)
