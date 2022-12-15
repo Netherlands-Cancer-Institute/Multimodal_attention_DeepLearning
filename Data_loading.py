@@ -18,7 +18,7 @@ def read_mg(file_paths, img_rows, img_cols, as_gray, channels):
         
     images = np.asarray(images, dtype=np.float32)
     images = np.stack((images,)*3, axis=-1)
-    images = images/images.max()
+    images = (images-images.min())/(images.max()-images.min())
     images = images.reshape(images.shape[0], img_rows, img_cols, channels)
     return images
     
@@ -41,6 +41,6 @@ def read_us(file_paths, img_rows, img_cols, as_gray, channels):
   
     images = np.asarray(images, dtype=np.float32)
     images = np.stack((images,)*3, axis=-1)
-    images = images/images.max()
+    images = (images-images.min())/(images.max()-images.min())
     images = images.reshape(images.shape[0], img_rows, img_cols, channels)
     return images
