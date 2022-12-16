@@ -11,6 +11,9 @@ The multi-modal deep learning algorithm was developed to predict the molecular s
 * Others
 1. Model details based on mammography or ultrasound only are also provided. Please see "Models_mammography.py" and "Models_ultrasound.py".
 
+* Training and testing
+"python  .../(python_file).py"
+
 
 ### Requirements:
 
