@@ -78,7 +78,7 @@ class Self_Attention(tf.keras.layers.Layer):
         config=super().get_config().copy()
         config.update({
             'ch': self.channels,
-            'self.channels // 1': self.filters_f_g,
+            'self.channels // 8': self.filters_f_g,
             'self.channels': self.filters_h,
         })
         return config
