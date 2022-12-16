@@ -55,7 +55,8 @@ Note: Model details of MDL-IIA. a, the proposed multi-modal deep learning with i
 
 ### Contact details
 If you have any questions please contact us. 
-Emails: ritse.mann@radboudumc.nl; r.mann@nki.nl; taotanjs@gmail.com
+
+Email: ritse.mann@radboudumc.nl; r.mann@nki.nl; taotanjs@gmail.com
 
 [Netherlands Cancer Institute](https://www.nki.nl/)
 [Radboud university medical center](https://www.radboudumc.nl/en/patient-care)
