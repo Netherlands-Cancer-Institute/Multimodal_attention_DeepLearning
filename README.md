@@ -3,11 +3,14 @@
 The multi-modal deep learning algorithm was developed to predict the molecular subtypes of breast cancer. This model was combined with the attention mechanism to create the final model (multi-modal deep learning with intra- and inter-modality attention modules: MDL-IIA)
 
 ### Notes:
+
 * Multimodal deep learning
+* 
 1. Models_MDL-IIA_4-category.py: Model details for predicting 4-category molecular subtypes.
 2. Models_MDL-IIA_L-NL.py: Model details for distinguishing between Luminal disease and Non-Luminal disease.
 
 * Others
+
 Model details based on mammography or ultrasound only are also provided. Please see "Models_mammography.py" and "Models_ultrasound.py".
 
 
