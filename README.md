@@ -11,7 +11,7 @@ The multi-modal deep learning algorithm was developed to predict the molecular s
 * scikit-learn 0.24.2
 
 ### Multimodal_data
-Data structure form
+Data structure form. CC, craniocaudal (mamography). MLO, mediolateral oblique (mamography). US, ultrasound
 
 ```
 .
