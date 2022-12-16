@@ -10,6 +10,30 @@ The multi-modal deep learning algorithm was developed to predict the molecular s
 * scikit-image 0.18.1
 * scikit-learn 0.24.2
 
+### Multimodal_data
+Data structure form
+
+```
+.
+└── Multimodal_data
+    ├── train   
+    │     ├── 00001_CC.png
+    │     ├── 00001_MLO.png
+    │     ├── 00001_US.png
+    │     ├── 00002_CC.png
+    │     ├── 00002_MLO.png
+    │     ├── 00002_US.png
+    |     └── ...  
+    │
+    └── test   
+          ├── 00001_CC.png
+          ├── 00001_MLO.png
+          ├── 00001_US.png
+          ├── 00002_CC.png
+          ├── 00002_MLO.png
+          ├── 00002_US.png
+          └── ... 
+```
 
 ### Model details
 Model details of MDL-IIA. a, the proposed multi-modal deep learning with intra- and inter-modality attention model. b, the structure of channel and spatial attention. C, channel. H, height. W, width. Q, query. K, key. V, value. MG, mammography. US, ultrasound. MLO, mediolateral oblique view. CC, craniocaudal view. GAP, global average pooling. FC, fully-connected layer. HER2-E, HER2-enriched. TN, triple-negative.
