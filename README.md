@@ -53,6 +53,5 @@ Model details of MDL-IIA. a, the proposed multi-modal deep learning with intra- 
 ### Contact details
 If you have any questions please contact us. 
 Emails: ritse.mann@radboudumc.nl; r.mann@nki.nl; taotanjs@gmail.com
-![image](https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Figures/NKI.png)![image](https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Figures/RadboudUMC.png)
 <img src="https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Figures/NKI.png" width="253" height="132"/>
 <img src="https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Figures/RadboudUMC.png" width="350" height="113"/>
