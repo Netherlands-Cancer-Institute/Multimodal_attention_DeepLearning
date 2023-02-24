@@ -61,7 +61,7 @@ Please refer to this article for the result visualization.
 If this work is helpful for you, please cite our paper as follows:
 
 ```
-Tianyu, Z. et al. Predicting breast cancer types on and beyond molecular level in a multi-modal fashion. **NPJ breast cancer** (2023).
+Tianyu, Z. et al. Predicting breast cancer types on and beyond molecular level in a multi-modal fashion. _NPJ_ _breast_ _cancer_ (2023).
 ```
 
 ### Contact details
