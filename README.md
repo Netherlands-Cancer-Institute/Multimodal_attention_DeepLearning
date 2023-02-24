@@ -57,6 +57,12 @@ Note: Model details of MDL-IIA. a, the proposed multi-modal deep learning with i
 Please refer to this article for the result visualization.
 [Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization](https://openaccess.thecvf.com/content_ICCV_2017/papers/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.pdf)
 
+### Citation
+If this work is helpful for you, please cite our paper as follows:
+
+```
+Tianyu, Z. et al. Predicting breast cancer types on and beyond molecular level in a multi-modal fashion. NPJ breast cancer (2023).
+```
 
 ### Contact details
 If you have any questions please contact us. 
