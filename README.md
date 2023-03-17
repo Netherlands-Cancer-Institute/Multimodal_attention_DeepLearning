@@ -67,8 +67,8 @@ Tianyu, Zhang et al. Predicting breast cancer types on and beyond molecular leve
 ### Contact details
 If you have any questions please contact us. 
 
-Email: ritse.mann@radboudumc.nl; r.mann@nki.nl; taotanjs@gmail.com
+Email: ritse.mann@radboudumc.nl (Ritse Mann); taotanjs@gmail.com (Tao Tan); t.zhang@nki.nl (Tianyu Zhang)
 
-Links: [Netherlands Cancer Institute](https://www.nki.nl/) [Radboud university medical center](https://www.radboudumc.nl/en/patient-care)
+Links: [Netherlands Cancer Institute](https://www.nki.nl/), [Radboud University Medical Center](https://www.radboudumc.nl/en/patient-care) and [Maastricht University](https://www.maastrichtuniversity.nl/nl)
 
-<img src="https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Figures/NKI.png" width="253" height="132"/> <img src="https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Figures/RadboudUMC.png" width="350" height="113"/>
+<img src="https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Figures/NKI.png" width="166.98" height="87.12"/> <img src="https://github.com/Netherlands-Cancer-Institute/Multimodal_attention_DeepLearning/blob/main/Figures/RadboudUMC.png" width="231" height="74.58"/> <img src="https://github.com/Netherlands-Cancer-Institute/RadioLOGIC_NLP/blob/main/Figure/Maastricht.png" width="237.6" height="74.844"/>  
