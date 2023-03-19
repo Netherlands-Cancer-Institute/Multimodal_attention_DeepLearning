@@ -62,7 +62,7 @@ If this work is helpful for you, please cite our paper as follows:
 
 ```
 T. Zhang et al. Predicting breast cancer types on and beyond molecular level in a multi-modal fashion. NPJ Breast Cancer (2023).
-DOI: https://doi.org/10.1038/s41523-023-00517-2
+[DOI] (https://doi.org/10.1038/s41523-023-00517-2)
 ```
 
 ### Contact details
