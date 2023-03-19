@@ -61,7 +61,7 @@ Please refer to this article for the result visualization.
 If this work is helpful for you, please cite our paper as follows:
 
 ```
-Tianyu Zhang et al. Predicting breast cancer types on and beyond molecular level in a multi-modal fashion. NPJ breast cancer (2023).
+Tianyu Zhang et al. Predicting breast cancer types on and beyond molecular level in a multi-modal fashion. NPJ breast cancer (2023). https://doi.org/10.1038/s41523-023-00517-2
 ```
 
 ### Contact details
